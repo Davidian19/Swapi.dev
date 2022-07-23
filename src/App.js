@@ -1,25 +1,58 @@
-import logo from './logo.svg';
+import React, { useState, useEffect } from 'react';
 import './App.css';
 
 function App() {
+
+  const [peoples, setPeoples] = useState([]);
+  const [filter, setFilter] = useState('');
+  
+
+   useEffect(() => {
+      fetch('https://swapi.dev/api/people/?format=json')
+        .then((response) => response.json())
+        .then((data) => {
+           console.log(data);
+           setPeoples(data.results);
+           
+        })
+        .catch((err) => {
+           console.log(err.message);
+        });
+  }, []);
+  console.log(filter)
+
+  
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+   <div className="Container">
+    <div className="nav">
+      <strong><span>Personagens</span></strong>
     </div>
-  );
+    
+    <div className='containerList'>
+
+      <input placeholder='Pesquisar personagem' 
+        value={filter}
+        onChange={(ev) => setFilter(ev.target.value)}
+      />
+      
+
+      {peoples.map((people, index) => {
+         return (
+            <div className="post-card" key={index}>
+              <ul>
+                <li className="post-title"><strong>{people.name}</strong></li>
+                <div className="button">
+                  <a href='https://swapi.dev/api/people/'><strong><span>Detalhes</span></strong></a>
+                </div>
+              </ul>
+               
+            </div>
+         );
+      })}
+    </div>
+   </div>
+   );
 }
 
 export default App;
