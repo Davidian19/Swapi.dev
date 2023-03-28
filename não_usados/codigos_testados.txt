@@ -1,0 +1,289 @@
+import React, { useEffect, useState } from "react";
+import './App.css';
+
+
+function Registers({ list = [] }){
+
+  return <table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Height</th>
+      <th>Mass</th>
+      <th>Hair Color</th>
+      <th>Skin Color</th>
+      <th>Eye Color</th>
+    </tr>
+
+  </thead>
+  <tbody>
+    {
+      list.map( ({ name, height, mass, hair_color, skin_color, eye_color }) => {
+        return <tr>
+          <td> {name} </td>
+          <td> {height} </td>
+          <td> {mass} </td>
+          <td> {hair_color} </td>
+          <td> {skin_color} </td>
+          <td> {eye_color} </td>
+        </tr>
+      })
+    }
+
+  </tbody>
+
+  </table>
+}
+
+
+
+function App() {
+
+  var[ list, setList ] = useState([])
+
+  useEffect( () => {
+    fetch("https://swapi.dev/api/people/").then((response) => response.json())
+  .then((json) => console.log(json));
+  })
+
+  return <div>
+    
+    <Registers />
+  </div>;
+}
+
+export default App;
+
+
+
+===================================================================================================
+
+const counterPerson = document.getElementById("personagens");
+
+
+function preencherContador(){
+  Promise.all([swapiGet('people/')])
+  .then(function (results) {
+    counterPerson.innerHTML = results[0].data.count;
+  });
+}
+
+====================================================================================================
+import React from "react";
+import './App.css';
+
+
+class App extends React.Component {
+   
+    constructor(props) {
+        super(props);
+   
+        this.state = {
+            items: [],
+            DataisLoaded: false
+        };
+    }
+    componentDidMount() {
+        fetch("https://swapi.dev/api/people/")
+            .then((res) => res.json()) 
+            .then((json) => {
+                this.setState({
+                    people: json,
+                    DataisLoaded: true
+                    
+                })
+            })
+           
+    }
+    
+    render() {
+        const { DataisLoaded, items } = this.state;
+        if (!DataisLoaded) return <div>
+            <h1> Pleses wait some time.... </h1> </div> ;
+   
+        return (
+        <div className = "App">
+            <h1> Fetch data from an api in react </h1>  {
+                items.map((people) => ( 
+                <ol key = { people.name } >
+                    Name: { people.name }, 
+                    mass: { people.mass }, 
+                </ol>
+                ))
+            }
+        </div>
+    );
+}
+}
+export default App;
+
+=========================================================================================================
+
+import React from 'react';
+
+class List extends React.Component {
+    state = {
+        peoples: []
+    };
+
+    componentDidMount() {
+      fetch("https://swapi.dev/api/people/")
+            .then(res => res.json())
+            .then(res => {
+                this.setState({
+                    peoples: res
+                });
+            });
+    }
+
+    render() {
+        return (
+            <div>
+                <h1>Lista de personagens</h1>
+
+                <ul>
+                    {this.state.peoples.map(item => (
+                        <li key={item.id}>
+                            <p><b>Nome:</b> {item.name}</p>
+                            <p><b>Criador:</b> {item.mass}</p>
+                            
+                        </li>
+                    ))}
+                </ul>
+            </div>
+        );
+    }
+}
+
+export default List;
+=================================================================================================
+
+import React from "react";
+import './App.css';
+
+
+class App extends React.Component {
+   
+    constructor(props) {
+        super(props);
+   
+        this.state = {
+            items: [],
+            DataisLoaded: false
+        };
+    }
+    componentDidMount() {
+        fetch("https://swapi.dev/api/people/")
+            .then((res) => res.json()) 
+            .then((json) => {
+                this.setState({
+                    people: json,
+                    DataisLoaded: false
+                    
+                })
+            })
+           
+    }
+    
+    render() {
+        const { DataisLoaded, items } = this.state;
+        if (!DataisLoaded) return <div>
+            <h1> Pleses wait some time.... </h1> </div> ;
+   
+        return (
+        <div className = "App">
+            <h1> Fetch data from an api in react </h1>  {
+                items.map((people) => ( 
+                <ol key = { people.name } >
+                    Name: { people.name }, 
+                    mass: { people.mass }, 
+                </ol>
+                ))
+            }
+        </div>
+    );
+}
+}
+export default App;
+
+============================================================================================
+
+import React, { Component } from 'react';
+import { Interface } from 'readline';
+import api from './api';
+
+
+
+class App extends Component {
+
+  state = {
+    peoples: [],
+  }
+
+  async componentDidMount() {
+    const response = await api.get('');
+
+    this.setState({ 
+      peoples: response.data,
+      
+    })
+
+  }
+
+  render() {
+    
+    const { peoples } = this.state;
+    return (
+      <div>
+        <h1>Listar os Personagens</h1>
+        {console.log(peoples)}
+        {peoples.map((people, index) =>{
+          <div key={index}>
+            <li> 
+              <h2>Nome do Persongem</h2>
+              {people.results.index.name}
+            </li>
+          </div>
+          
+        }
+          )}
+      </div>
+    );
+  };
+};
+
+export default App;
+
+=========================================================================
+
+import React, { useState, useEffect } from 'react';
+import api from './api';
+
+
+function App(){
+  const[peoples, setPeoples] = useState([]);
+  useEffect(()=>{
+    api.get('').then(({data})=> {
+      setPeoples(data.results);
+    })
+    console.log("aqui está o people: ", peoples);
+    
+
+    //eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+  return (
+    <div>
+      <h1>Listar os Personagens</h1>
+      <ul>
+        {peoples.forEach((people, index) =>{
+          <li> {people.name}</li>    
+          console.log("aqui está o people.name", people.name);    
+          }
+        )}
+      </ul>
+    </div>
+  );
+  
+}
+export default App;
+
